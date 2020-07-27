@@ -1,0 +1,1 @@
+This directore stores all results of output of main.py in separate folders.
