@@ -1,4 +1,4 @@
-#Dependencies
+# Dependencies
 - pdf2image (with poppler)
 - pytesseract
 - cv2
