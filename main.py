@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import converter
 import  constants
 import run_ocr
@@ -12,24 +13,34 @@ import xlsxwriter
 
 
 filename=constants.filename
-cur_path= os.getcwd() 
-joined_path=os.path.join(cur_path,"Details\\"+filename)
+cur_path= Path.cwd()
+p= Path("example") 
+read_path= Path.joinpath(p,filename)
+joined_path= Path.joinpath(cur_path,"Details")
+joined_path= Path.joinpath(joined_path,filename)
 try:
-    os.mkdir(joined_path)
+    Path.mkdir(joined_path)
 except OSError as er:
     print("-----Directory for "+filename+" detected----------")
 try:
-    os.mkdir(os.path.join(joined_path,'Pages'))
-    os.mkdir(os.path.join(joined_path,'Intermediates'))
-    os.mkdir(os.path.join(joined_path,'Rows'))
+    Path.mkdir(Path.joinpath(joined_path,'Pages'))
+    Path.mkdir(Path.joinpath(joined_path,'Intermediates'))
+    Path.mkdir(Path.joinpath(joined_path,'Rows'))
 except OSError as er:
     print("-----Directory for "+filename+" detected----------")
-if filename.split(".")[-1]=="pdf":
-    converter.convert_to_jpeg(cur_path+"\\example\\"+filename,joined_path+"\\Pages")
-else:
-    converter.in_jpeg(cur_path+"\\example\\"+filename,joined_path+"\\Pages")
 
-preproces.box_extraction(joined_path+"\\Pages\\page1.jpg")
+file_input= Path.joinpath(cur_path,read_path)
+file_output= Path.joinpath(joined_path,"Pages")    
+
+if filename.split(".")[-1]=="pdf":
+    converter.convert_to_jpeg(file_input,file_output)
+else:
+    converter.in_jpeg(file_input,file_output)
+
+
+page= Path("Pages")
+one = Path.joinpath(page,"page1.jpg")
+preproces.box_extraction(Path.joinpath(joined_path,one))
 run_ocr.run_tesseract()
 buyer, seller, invoice= extraction.get_details()
 array= tables.get_data()
@@ -102,9 +113,9 @@ for i in range(rows):
 # functions
 # generate xls file from the data in present in tk entries
 
-path_to_write= os.getcwd()+"/Details/"+filename
+path_to_write= joined_path
 def genxlsx():
-    workbook = xlsxwriter.Workbook(path_to_write+'/Invoice.xlsx')
+    workbook = xlsxwriter.Workbook(Path.joinpath(path_to_write,"Invoice.xlsx"))
     worksheet = workbook.add_worksheet()
     row = 0
     col = 0
@@ -115,20 +126,20 @@ def genxlsx():
         row += 1
     max_row = max(max_row, row)
     row = 0
-    col += 3
+    col += 6
     for i in buyer_tk:
         worksheet.write(row, col, i[0].cget('text'))
         worksheet.write(row, col+1, i[1].get())
         row += 1
         max_row = max(max_row, row)
     row = 0
-    col += 3
+    col += 6
     for i in invoice_tk:
         worksheet.write(row, col, i[0].cget('text'))
         worksheet.write(row, col+1, i[1].get())
         row += 1
     max_row = max(max_row, row)
-    row = max_row + 1
+    row = max_row + 2
     col = 0
     for i in array_tk:
         for j in i:
@@ -147,6 +158,6 @@ gen.grid(row=0, column=0)
 quit = Button(buttons, text="QUIT", fg="red", command=root.destroy)
 quit.grid(row=0, column=1)
 
-
+print("==========EXTRACTION FINISHED============")
 # mainloop
 root.mainloop()

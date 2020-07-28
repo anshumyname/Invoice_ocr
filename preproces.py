@@ -1,10 +1,13 @@
 import cv2
-import os
+from pathlib import Path
 import constants
 import numpy as np
 
 filename=constants.filename
-path_to_write= os.getcwd()+"/Details/"+filename+"/Intermediates"
+path_to_read= Path.cwd()
+path_to_read= Path.joinpath(path_to_read,"Details")
+path_to_read= Path.joinpath(path_to_read,filename)
+path_to_read= Path.joinpath(path_to_read,"Intermediates")
 def sort_contours(cnts, method="left-to-right"):
     # initialize the reverse flag and sort index
     reverse = False
@@ -33,14 +36,14 @@ def sort_contours(cnts, method="left-to-right"):
 def box_extraction(img_for_box_extraction_path):
 
     print("Reading image..")
-    img = cv2.imread(img_for_box_extraction_path, 0)  # Read the image
+    img = cv2.imread(str(img_for_box_extraction_path), 0)  # Read the image
     # img= cv2.resize(img,(1080,1080))
     (thresh, img_bin) = cv2.threshold(img, 128, 255,
                                       cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # Thresholding the image
     img_bin =cv2.bitwise_not(img_bin,mask=None)  # Invert the image
 
     print("Storing binary image to Images/Image_bin.jpg..")
-    cv2.imwrite(path_to_write+"/Image_bin.jpg",img_bin)
+    cv2.imwrite(str(Path.joinpath(path_to_read,"Image_bin.jpg")),img_bin)
 
     print("Applying Morphological Operations..")
     # Defining a kernel length
@@ -64,7 +67,7 @@ def box_extraction(img_for_box_extraction_path):
     # Morphological operation to detect verticle lines from an image
     img_temp1 = cv2.erode(dst, verticle_kernel, iterations=3)
     verticle_lines_img = cv2.dilate(img_temp1, verticle_kernel, iterations=3)
-    cv2.imwrite(path_to_write+"/verticle_lines.jpg",verticle_lines_img)
+    cv2.imwrite(str(Path.joinpath(path_to_read,"verticle_lines.jpg")),verticle_lines_img)
     ar= np.array(verticle_lines_img)
     
     height,width= ar.shape
@@ -78,7 +81,7 @@ def box_extraction(img_for_box_extraction_path):
     # Morphological operation to detect horizontal lines from an image
     img_temp2 = cv2.erode(dst, hori_kernel, iterations=3)
     horizontal_lines_img = cv2.dilate(img_temp2, hori_kernel, iterations=3)
-    cv2.imwrite(path_to_write+ "/horizontal_lines.jpg",horizontal_lines_img)
+    cv2.imwrite(str(Path.joinpath(path_to_read,"horizontal_lines.jpg")),horizontal_lines_img)
 
     # Weighting parameters, this will decide the quantity of an image to be added to make a new image.
     alpha = 0.5

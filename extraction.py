@@ -1,15 +1,19 @@
 import constants
 import numpy as np
-import os
+from pathlib import Path
 import re
 import io
 
 filename=constants.filename
-path_to_write= os.getcwd()+"/Details/"+filename+"/Intermediates"
+path_to_read= Path.cwd()
+path_to_read= Path.joinpath(path_to_read,"Details")
+path_to_read= Path.joinpath(path_to_read,filename)
+path_to_read= Path.joinpath(path_to_read,"Intermediates")
+
 def get_details():
     print("----Extracting-------")
     text=[]
-    f= open(path_to_write+'/output.txt')
+    f= open(Path.joinpath(path_to_read,'output.txt'))
     lines= f.readlines()
     for line in lines:
         if len(line)>1:
@@ -34,8 +38,17 @@ def get_details():
     adresfound=0
     adresindex=None
     adresx=None
+    inv=False
     po_found=False
     for line in text:
+        if "Invoice" in line:
+            idx=line.find("Invoice")
+            if inv==False:
+                inv=True
+                invoice_details.append(["Invoice No.",line[idx+5:]])
+            else:
+                invoice_details.append(["Invoice Date",line[idx+5:]])
+
         if ("GSTIN" in line):
             idx=line.find("GSTIN")
             if gst==0:
