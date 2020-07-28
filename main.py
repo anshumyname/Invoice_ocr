@@ -115,20 +115,20 @@ def genxlsx():
         row += 1
     max_row = max(max_row, row)
     row = 0
-    col += 3
+    col += 4
     for i in buyer_tk:
         worksheet.write(row, col, i[0].cget('text'))
         worksheet.write(row, col+1, i[1].get())
         row += 1
         max_row = max(max_row, row)
     row = 0
-    col += 3
+    col += 4
     for i in invoice_tk:
         worksheet.write(row, col, i[0].cget('text'))
         worksheet.write(row, col+1, i[1].get())
         row += 1
     max_row = max(max_row, row)
-    row = max_row + 1
+    row = max_row + 2
     col = 0
     for i in array_tk:
         for j in i:
