@@ -16,13 +16,14 @@ def get_details():
     f= open(Path.joinpath(path_to_read,'output.txt'))
     lines= f.readlines()
     for line in lines:
-        if len(line)>1:
+        if len(line)>2:
             text.append(line)
     f.close()
     buyer_details=[]
     seller_details=[]
     invoice_details=[]
 
+    
     if ("INVOICE" in text[0])==False:
         buyer_details.append(np.array(["Name",text[0]]))
     else:
