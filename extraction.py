@@ -1,7 +1,6 @@
 import constants
 import numpy as np
 from pathlib import Path
-import re
 import io
 
 #This file reads output.txt line by line and finds if required details can be found inside in it

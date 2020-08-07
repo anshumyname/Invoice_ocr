@@ -1,5 +1,4 @@
 import cv2
-from skimage import io
 from pathlib import Path
 import constants
 import numpy as np
