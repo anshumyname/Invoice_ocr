@@ -1,7 +1,5 @@
 import cv2
-import sys
-import constants
-import handler
+import constants, handler
 import numpy as np
 from PIL import Image
 from pathlib import Path
@@ -15,19 +13,20 @@ path_to_write= Path.joinpath(path_to_read,filename)
 path_to_read= Path.joinpath(path_to_write,"Intermediates")
 def get_data():
     print("----Getting tables-----")
+    # Reading images
     vert= cv2.imread(str(Path.joinpath(path_to_read,'verticle_lines.jpg')))
     horzt= cv2.imread(str(Path.joinpath(path_to_read,'horizontal_lines.jpg')))
     actual=cv2.imread(str(Path.joinpath(path_to_read,'Image_bin.jpg')))
     actual =cv2.bitwise_not(actual,mask=None)
-    ar= np.array(vert);
+    ar= np.array(vert)
     ahr= np.array(horzt)
     height,width,channel= ar.shape
-    horizontal_lines=[]
-    vert_lines=[]
-    color=ar[0][0]
-    xi=None 
-    xj=None
+    horizontal_lines=[] #Stores the cordinates of horizontal lines
+    vert_lines=[]        #Stores the cordinates of vertical lines
+    xi=None            # Starting point of the table
+    xj=None             #End point of the table
     flag=0
+    #Loop over the image to find the xi and xj by count of vertical lines (>4)
     for i in range(height):
         c=0
         for j in range(50,width,3):
@@ -46,9 +45,11 @@ def get_data():
 
     
     h=0
+    #ENABLED IF HORIZONTAL LINES AREN'T AVAILABLE
     manual=constants.manual_enable
     if (xi!=None and xj!=None):
             dist=[]
+            #Get cordinates of horizontal and vertical lines
             for j in range(0,width,3):
                 mid=(xi+xj)//2
                 comp= sum(ar[mid][j])>15
@@ -61,13 +62,12 @@ def get_data():
                     horizontal_lines.append(i)
 
     
-    
-        
-    # for k in dist:
-        # actual=cv2.line(actual,(k,0),(k,height),(0,255,255),3)
-    
+    # If cordinates couldn't be be found properly manually it is taken
     if(xi==None or xj==None or len(vert_lines)<=3):
         print("<<<<<---Image too rough for reading ..Mannual assistance needed-->>>>>>")
+        print("1. In the opened image double click to save the cordinates ")
+        print("2. First save the starting horizontal line , then line immediate next to that for taking width and finally the end point of table ")
+        print("3. Now for vertical lines cordinates double click from left to right all vertical lines starting point ")
         handler.get_cordinates()
         li=constants.cords
         xi=li[0][1]
@@ -76,7 +76,7 @@ def get_data():
         vert_lines=[li[i][0] for i in range(3,len(li))]
         manual=True
     
-     
+    #Plotting the saved cordinates 
     imk=np.copy(actual) 
     imk= cv2.line(imk,(0,xi),(width,xi),(55,56,240),5)
     for ho in horizontal_lines:
@@ -98,7 +98,7 @@ def get_data():
     if (manual==False):
         if(abs(horizontal_lines[0]-xi)>10):
             horizontal_lines.insert(0,xi)
-        print(horizontal_lines)
+        #Performing box by box extraction 
         rw=0
         for i in range(len(horizontal_lines)-1):
             text=[]
@@ -119,6 +119,7 @@ def get_data():
             tables.append(text)
     else:
         rw=0
+        #Performing box by box extraction with fixed width
         for i in range(xi,xj+1,h):
             text=[]
             for j in range(len(vert_lines)-1):
@@ -136,7 +137,8 @@ def get_data():
                 text.append(str(txt))
             rw+=1
             tables.append(text)
-            
+    
+    #Pad with null values if not in proper format
     wid= max([len(i) for i in tables])
     tables= pad(tables,wid,"NULL")
     return np.array(tables)
@@ -150,5 +152,5 @@ def pad(array,wid, fill_value):
     
     return array
 
-# x=get_data()
+
 

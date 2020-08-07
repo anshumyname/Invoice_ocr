@@ -1,17 +1,11 @@
 import os
 from pathlib import Path
-import converter
-import  constants
-import run_ocr
-import preproces
-import extraction 
-import tables
-import converter
+import converter, constants,run_ocr, preproces, extraction , tables,converter
 from tkinter import Tk, Entry, Frame, LabelFrame, Label, Button, END
 import numpy as np
 import xlsxwriter
 
-
+#Making directories for new file 
 filename=constants.filename
 cur_path= Path.cwd()
 p= Path("example") 
@@ -32,6 +26,8 @@ except OSError as er:
 file_input= Path.joinpath(cur_path,read_path)
 file_output= Path.joinpath(joined_path,"Pages")    
 
+
+#If the format is in pdf then convert it to jpegs
 if filename.split(".")[-1]=="pdf":
     converter.convert_to_jpeg(file_input,file_output)
 else:
@@ -39,12 +35,22 @@ else:
 
 
 page= Path("Pages")
+#Process page 1
 one = Path.joinpath(page,"page1.jpg")
-preproces.box_extraction(Path.joinpath(joined_path,one))
+
+#Generating binary images and doing morphological operations
+preproces.process(Path.joinpath(joined_path,one))
+
+#Run dry tesseract on page to get output.txt
 run_ocr.run_tesseract()
+
+#Once output.txt generated extract nominal details from it
 buyer, seller, invoice= extraction.get_details()
+
+#Getting the tabular data of the invoice
 array= tables.get_data()
 
+#Displaying the extracted data in the GUI with tkinter
 root = Tk()
 
 # keep track of widgets

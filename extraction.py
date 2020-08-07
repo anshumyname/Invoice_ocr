@@ -4,6 +4,8 @@ from pathlib import Path
 import re
 import io
 
+#This file reads output.txt line by line and finds if required details can be found inside in it
+
 filename=constants.filename
 path_to_read= Path.cwd()
 path_to_read= Path.joinpath(path_to_read,"Details")

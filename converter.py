@@ -2,9 +2,9 @@ from pathlib import Path
 import pdf2image
 import cv2
 from pdf2image import convert_from_path
-
 import os
 
+# If in pdf convert and store to jpeg
 def convert_to_jpeg(pdf_path,output_folder):
     print("*"*50)
     print("converting.......")
@@ -15,6 +15,8 @@ def convert_to_jpeg(pdf_path,output_folder):
         join= 'page'+str(i)+'.jpg'
         path= Path.joinpath(output_folder,join)
         page.save(path, 'JPEG')
+
+#Store if format is jpeg
 def in_jpeg(img_path,output_folder):
     img=cv2.imread(img_path)
     join= 'page'+str(i)+'.jpg'
