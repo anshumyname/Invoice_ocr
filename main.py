@@ -1,17 +1,11 @@
 import os
 from pathlib import Path
-import converter
-import  constants
-import run_ocr
-import preproces
-import extraction 
-import tables
-import converter
+import converter, constants,run_ocr, preproces, extraction , tables,converter
 from tkinter import Tk, Entry, Frame, LabelFrame, Label, Button, END
 import numpy as np
 import xlsxwriter
 
-
+#Making directories for new file 
 filename=constants.filename
 cur_path= Path.cwd()
 p= Path("example") 
@@ -20,6 +14,7 @@ joined_path= Path.joinpath(cur_path,"Details")
 joined_path= Path.joinpath(joined_path,filename)
 try:
     Path.mkdir(joined_path)
+    print("------Directory "+filename+ " Created----------")
 except OSError as er:
     print("-----Directory for "+filename+" detected----------")
 try:
@@ -32,6 +27,8 @@ except OSError as er:
 file_input= Path.joinpath(cur_path,read_path)
 file_output= Path.joinpath(joined_path,"Pages")    
 
+
+#If the format is in pdf then convert it to jpegs
 if filename.split(".")[-1]=="pdf":
     converter.convert_to_jpeg(file_input,file_output)
 else:
@@ -39,12 +36,28 @@ else:
 
 
 page= Path("Pages")
+#Process page 1
 one = Path.joinpath(page,"page1.jpg")
-preproces.box_extraction(Path.joinpath(joined_path,one))
+
+#Generating binary images and doing morphological operations
+preproces.process(Path.joinpath(joined_path,one))
+
+#Run dry tesseract on page to get output.txt
 run_ocr.run_tesseract()
-buyer, seller, invoice= extraction.get_details()
+
+#Once output.txt generated extract nominal details from it
+buyer=np.array([])
+seller=np.array([])
+invoice=np.array([])
+if constants.manual_field_enable:
+    buyer= extraction.get_details()
+else:
+    buyer, seller, invoice= extraction.get_details()
+
+#Getting the tabular data of the invoice
 array= tables.get_data()
 
+#Displaying the extracted data in the GUI with tkinter
 root = Tk()
 
 # keep track of widgets
@@ -79,7 +92,7 @@ for i in range(rows):
     l.grid(row=i, column=0)
     buyer_tk[i][0] = l
     e = Entry(frame1)
-    e.grid(row=i, column=1)
+    e.grid(row=i, column=1,ipadx=10)
     e.insert(END, buyer[i][1])
     buyer_tk[i][1] = e
 

@@ -1,8 +1,10 @@
 import constants
+import manual_extracter  as mne
 import numpy as np
 from pathlib import Path
-import re
 import io
+
+#This file reads output.txt line by line and finds if required details can be found inside in it
 
 filename=constants.filename
 path_to_read= Path.cwd()
@@ -11,18 +13,20 @@ path_to_read= Path.joinpath(path_to_read,filename)
 path_to_read= Path.joinpath(path_to_read,"Intermediates")
 
 def get_details():
+    if(constants.manual_field_enable): return mne.manual_extraction()
     print("----Extracting-------")
     text=[]
     f= open(Path.joinpath(path_to_read,'output.txt'))
     lines= f.readlines()
     for line in lines:
-        if len(line)>1:
+        if len(line)>2:
             text.append(line)
     f.close()
     buyer_details=[]
     seller_details=[]
     invoice_details=[]
 
+    
     if ("INVOICE" in text[0])==False:
         buyer_details.append(np.array(["Name",text[0]]))
     else:
