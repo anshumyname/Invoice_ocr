@@ -1,4 +1,5 @@
 import constants
+import manual_extracter  as mne
 import numpy as np
 from pathlib import Path
 import io
@@ -12,6 +13,7 @@ path_to_read= Path.joinpath(path_to_read,filename)
 path_to_read= Path.joinpath(path_to_read,"Intermediates")
 
 def get_details():
+    if(constants.manual_field_enable): return mne.manual_extraction()
     print("----Extracting-------")
     text=[]
     f= open(Path.joinpath(path_to_read,'output.txt'))

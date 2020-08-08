@@ -46,24 +46,24 @@ def get_data():
     
     h=0
     #ENABLED IF HORIZONTAL LINES AREN'T AVAILABLE
-    manual=constants.manual_enable
+    manual=constants.manual_table_enable
     if (xi!=None and xj!=None):
-            dist=[]
+            
             #Get cordinates of horizontal and vertical lines
             for j in range(0,width,3):
                 mid=(xi+xj)//2
-                comp= sum(ar[mid][j])>15
+                comp= sum(ar[mid][j])>10
                 if(comp):
-                    dist.append(j)
-            vert_lines=dist
+                    vert_lines.append(j)
+            
             for i in range(xi,xj+1,3):
                 mid= (vert_lines[0]+vert_lines[-1])//2
-                if sum(ahr[i][mid])>15:
+                if sum(ahr[i][mid])>10:
                     horizontal_lines.append(i)
 
     
     # If cordinates couldn't be be found properly manually it is taken
-    if(xi==None or xj==None or len(vert_lines)<=3):
+    if(xi==None or xj==None or len(vert_lines)<=3 or manual):
         print("<<<<<---Image too rough for reading ..Mannual assistance needed-->>>>>>")
         print("1. In the opened image double click to save the cordinates ")
         print("2. First save the starting horizontal line , then line immediate next to that for taking width and finally the end point of table ")
@@ -79,6 +79,7 @@ def get_data():
     #Plotting the saved cordinates 
     imk=np.copy(actual) 
     imk= cv2.line(imk,(0,xi),(width,xi),(55,56,240),5)
+    imk= cv2.line(imk,(0,xj),(width,xj),(55,56,240),5)
     for ho in horizontal_lines:
         imk= cv2.line(imk,(0,ho),(width,ho),(255,0,0),5)
     for vo in vert_lines:
@@ -90,14 +91,14 @@ def get_data():
             p2=(vert_lines[j+1],horizontal_lines[i+1])
             imk=cv2.rectangle(imk,p1,p2,(55,0,i*20+90),4)    
     cv2.imwrite(str(Path.joinpath(path_to_read,"tables_drawn.jpg")),imk)
-    n=len(vert_lines)
     
-
     tables=[]
     #If we have horizontal lines on the table
     if (manual==False):
         if(abs(horizontal_lines[0]-xi)>10):
             horizontal_lines.insert(0,xi)
+        if(abs(horizontal_lines[-1]-xj)>10):
+            horizontal_lines.append(xj)
         #Performing box by box extraction 
         rw=0
         for i in range(len(horizontal_lines)-1):

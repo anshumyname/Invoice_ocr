@@ -14,6 +14,7 @@ joined_path= Path.joinpath(cur_path,"Details")
 joined_path= Path.joinpath(joined_path,filename)
 try:
     Path.mkdir(joined_path)
+    print("------Directory "+filename+ " Created----------")
 except OSError as er:
     print("-----Directory for "+filename+" detected----------")
 try:
@@ -45,7 +46,13 @@ preproces.process(Path.joinpath(joined_path,one))
 run_ocr.run_tesseract()
 
 #Once output.txt generated extract nominal details from it
-buyer, seller, invoice= extraction.get_details()
+buyer=np.array([])
+seller=np.array([])
+invoice=np.array([])
+if constants.manual_field_enable:
+    buyer= extraction.get_details()
+else:
+    buyer, seller, invoice= extraction.get_details()
 
 #Getting the tabular data of the invoice
 array= tables.get_data()
@@ -85,7 +92,7 @@ for i in range(rows):
     l.grid(row=i, column=0)
     buyer_tk[i][0] = l
     e = Entry(frame1)
-    e.grid(row=i, column=1)
+    e.grid(row=i, column=1,ipadx=10)
     e.insert(END, buyer[i][1])
     buyer_tk[i][1] = e
 

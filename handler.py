@@ -15,14 +15,14 @@ def get_cordinates():
     def printcoords(event,xs,ys,flags,params):
         #outputting x and y coords to console on double click
         if event==cv2.EVENT_LBUTTONDBLCLK:
-            old_x= 3*xs
-            oldy_y= 3*ys
+            old_x= 2*xs
+            oldy_y= 2*ys
             cn.cords.append([old_x,oldy_y])
             print ("Cordinates saved as ",old_x,oldy_y)
     
     #Display 1/3rd of the image to have a full look at a time
     imk=cv2.imread(str(Path.joinpath(path_to_read,"page1.jpg")))
-    imk= cv2.resize(imk,(int(imk.shape[1]/3),int(imk.shape[0]/3)))
+    imk= cv2.resize(imk,(int(imk.shape[1]/2),int(imk.shape[0]/2)))
     cv2.namedWindow("Image")
     cv2.setMouseCallback('Image',printcoords)
     while(True):
