@@ -7,11 +7,20 @@ It supports both PDFs and Jpegs format.
 - pdf2image [with poppler](https://pypi.org/project/pdf2image/)
 - pytesseract (5.0 + ) [Recommended to install from here](https://github.com/tesseract-ocr/tesseract/wiki)
 
-Go ahead with pip install for these three
+Go ahead with pip install for these 
 - cv2 (4.2.0 + )
 - numpy
 - tkinter
 - xlswriter
+
+## Screenshots
+![Auto detected Tables with Text ](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img1.jpg)
+
+:-------------------------:|:-------------------------:
+
+![Manual Labeling](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img2.jpg)  |  ![Tabular Lines Detected](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img3.jpg)
+
+
 
 ## How To Use
 - Clone the repo on your system
