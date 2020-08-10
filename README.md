@@ -4,8 +4,10 @@ This repo aims to convert scanned invoices to excel sheet using cv2 and pytesser
 It supports both PDFs and Jpegs format.
 
 ## Dependencies
-- pdf2image (with poppler)
-- pytesseract (5.0 + ) [Recommended to install from here]
+- pdf2image [with poppler](https://pypi.org/project/pdf2image/)
+- pytesseract (5.0 + ) [Recommended to install from here](https://github.com/tesseract-ocr/tesseract/wiki)
+
+Go ahead with pip install for these three
 - cv2 (4.2.0 + )
 - numpy
 - tkinter
