@@ -14,11 +14,17 @@ Go ahead with pip install for these
 - xlswriter
 
 ## Screenshots
+**Auto Detected Text with Tables**
+
 ![Auto detected Tables with Text ](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img1.jpg)
 
-:-------------------------:|:-------------------------:
+**Manual Labelling**
 
-![Manual Labeling](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img2.jpg)  |  ![Tabular Lines Detected](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img3.jpg)
+![Manual Labeling](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img2.jpg) 
+
+**Tabular Lines Detected Drawn**
+
+![Tabular Lines Detected](https://github.com/anshumyname/Invoice_ocr/blob/testing/readme_images/img3.jpg)
 
 
 
